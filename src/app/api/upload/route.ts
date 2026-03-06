@@ -81,7 +81,5 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Increase body size limit for Next.js route handler
-export const config = {
-  api: { bodyParser: false },
-};
+// Use App Router route segment config for body size limit
+export const maxDuration = 60;
