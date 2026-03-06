@@ -9,7 +9,7 @@ const config: Config = {
     "^@/(.*)$": "<rootDir>/src/$1",
   },
   testPathIgnorePatterns: ["/node_modules/", "/.next/"],
-  setupFilesAfterSetup: [],
+  setupFilesAfterEnv: [],
 };
 
 export default config;
