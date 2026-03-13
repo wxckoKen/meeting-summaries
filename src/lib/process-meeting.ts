@@ -1,6 +1,7 @@
 import { transcribeAudio } from "./transcribe";
 import { diarizeSpeakers } from "./diarize";
 import { generateSummary } from "./summarize";
+import { saveSummary } from "./db";
 import type { MeetingSummary, ProcessingStatus } from "@/types";
 
 /**
@@ -56,6 +57,13 @@ export async function processMeeting(
       message: "Generating summary, takeaways, and action items...",
     });
     const summary: MeetingSummary = await generateSummary(diarizedTranscript);
+
+    // Persist to database (non-fatal if it fails)
+    try {
+      saveSummary(summary);
+    } catch (dbError) {
+      console.error("[processMeeting] Failed to save summary to DB:", dbError);
+    }
 
     // Done!
     setJob(jobId, {

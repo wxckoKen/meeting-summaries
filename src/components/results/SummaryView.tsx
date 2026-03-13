@@ -4,6 +4,7 @@ import { useState } from "react";
 import type { MeetingSummary } from "@/types";
 import { TranscriptView } from "./TranscriptView";
 import { ActionItemList } from "./ActionItemList";
+import { ShareModal } from "./ShareModal";
 
 interface SummaryViewProps {
   summary: MeetingSummary;
@@ -17,6 +18,7 @@ type Tab = "summary" | "transcript" | "actions";
  */
 export function SummaryView({ summary, onReset }: SummaryViewProps) {
   const [activeTab, setActiveTab] = useState<Tab>("summary");
+  const [showShare, setShowShare] = useState(false);
 
   const tabs: { key: Tab; label: string; count?: number }[] = [
     { key: "summary", label: "Summary" },
@@ -36,12 +38,23 @@ export function SummaryView({ summary, onReset }: SummaryViewProps) {
             {summary.speakers.join(", ")}
           </p>
         </div>
-        <button
-          onClick={onReset}
-          className="rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
-        >
-          New Recording
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => setShowShare(true)}
+            className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 transition-colors flex items-center gap-2"
+          >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
+            </svg>
+            Share
+          </button>
+          <button
+            onClick={onReset}
+            className="rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+          >
+            New Recording
+          </button>
+        </div>
       </div>
 
       {/* Tab navigation */}
@@ -76,6 +89,11 @@ export function SummaryView({ summary, onReset }: SummaryViewProps) {
           <ActionItemList items={summary.actionItems} />
         )}
       </div>
+
+      {/* Share modal */}
+      {showShare && (
+        <ShareModal summary={summary} onClose={() => setShowShare(false)} />
+      )}
     </div>
   );
 }
